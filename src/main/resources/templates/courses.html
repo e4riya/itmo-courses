@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Курсы</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+    <h1>Каталог курсов</h1>
+    <p class="muted">Каждый курс связан с категорией, преподавателем, модулями, уроками, оплатами, прогрессом и сертификатами.</p>
+    <div class="grid grid-2">
+        <article class="card" th:each="course : ${courses}">
+            <span class="badge sql">PostgreSQL</span>
+            <span class="badge" th:text="${course.difficultyLevel()}">BEGINNER</span>
+            <span class="badge green" th:text="${course.status()}">PUBLISHED</span>
+            <h2 th:text="${course.title()}">Course</h2>
+            <p class="muted" th:text="${course.description()}">Description</p>
+            <table>
+                <tr><th>Категория</th><td th:text="${course.categoryName()}"></td></tr>
+                <tr><th>Преподаватель</th><td th:text="${course.instructorName()}"></td></tr>
+                <tr><th>Цена</th><td class="money" th:text="${#numbers.formatDecimal(course.price(), 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'"></td></tr>
+            </table>
+            <div class="footer-actions">
+                <a class="button" th:href="@{/courses/{id}(id=${course.id()}, studentId=${demoStudentId})}">Детали</a>
+            </div>
+        </article>
+    </div>
+</main>
+</body>
+</html>

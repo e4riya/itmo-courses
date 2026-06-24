@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Courses</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+    <section class="hero">
+        <div>
+            <span class="badge sql">PostgreSQL + MongoDB</span>
+            <h1>Онлайн-курсы и обучение</h1>
+            <p class="muted">Учебный стенд по проектированию БД: нормализованная SQL-модель, триггеры, гибкие MongoDB-документы и аналитика на native SQL.</p>
+            <div class="footer-actions">
+                <a class="button" th:href="@{/courses}">Открыть курсы</a>
+                <a class="button secondary" th:href="@{/analytics}">Посмотреть аналитику</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="stat" th:text="${#lists.size(courses)}">0</div>
+            <div class="muted">курсов в seed data</div>
+            <p>Демо-студент: <a th:href="@{/students/{id}(id=${demoStudentId})}" th:text="${demoStudentId}"></a></p>
+        </div>
+    </section>
+
+    <section class="schema-strip">
+        <div class="schema-item"><strong>14</strong><span>PostgreSQL-таблиц</span></div>
+        <div class="schema-item"><strong>7</strong><span>trigger functions</span></div>
+        <div class="schema-item"><strong>3</strong><span>MongoDB collections</span></div>
+        <div class="schema-item"><strong>10</strong><span>native SQL отчетов</span></div>
+    </section>
+
+    <h2 class="section-title">Популярные курсы</h2>
+    <div class="grid grid-3">
+        <article class="card" th:each="course : ${courses}">
+            <span class="badge" th:text="${course.status()}">PUBLISHED</span>
+            <h3 th:text="${course.title()}">Course</h3>
+            <p class="muted" th:text="${course.description()}">Description</p>
+            <p><strong class="money" th:text="${#numbers.formatDecimal(course.price(), 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'">0 ₽</strong></p>
+            <a class="button" th:href="@{/courses/{id}(id=${course.id()})}">Открыть</a>
+        </article>
+    </div>
+</main>
+</body>
+</html>

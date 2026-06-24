@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: onlinecourses
+  datasource:
+    url: jdbc:postgresql://localhost:5432/online_courses
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      separator: ^^
+      mode: always
+      schema-locations:
+        - classpath:db/init/01_schema.sql
+        - classpath:db/init/02_triggers.sql
+      data-locations:
+        - classpath:db/init/03_seed_data.sql
+      continue-on-error: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/online_courses
+      uuid-representation: standard

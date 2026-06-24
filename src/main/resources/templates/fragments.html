@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="topbar" class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" th:href="@{/}">Online Courses DB Lab</a>
+        <nav class="nav">
+            <a th:href="@{/courses}">Курсы</a>
+            <a th:href="@{/students/10000000-0000-0000-0000-000000000001}">Студент</a>
+            <a th:href="@{/analytics}">Аналитика</a>
+            <a th:href="@{/api/courses}">REST API</a>
+        </nav>
+    </div>
+</header>
+</body>
+</html>

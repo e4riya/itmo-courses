@@ -1,48 +1,64 @@
-.gradle
+# Gradle
+.gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-app/gradlew
-HELP.md
-gradlew*
-
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-.idea
-*.iws
-*.iml
-*.ipr
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
+# Keep Gradle wrapper files in git
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+!gradlew
+!gradlew.bat
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse / STS
 .classpath
-.factorypath
 .project
-.settings
+.settings/
+.apt_generated/
+.factorypath
 .springBeans
-.sts4-cache
+.sts4-cache/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
 
-### Mac OS ###
+# macOS
 .DS_Store
+._*
+
+# Logs
+*.log
+logs/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Runtime / recordings
 *.cast
-~
+
+# Local defense materials
+PROJECT_GUIDE.md
+PRESENTATION_SPEECH.md
+docs/online-courses-presentation.pptx
+
+# Office temporary lock files
+~$*
+
+# Java temporary files
+hs_err_pid*
+replay_pid*

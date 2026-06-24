@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Студент</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+    <h1>Кабинет студента</h1>
+    <p class="muted" th:text="${studentId}">student</p>
+
+    <section class="grid grid-2">
+        <article class="card">
+            <div class="panel-title">
+                <h2>Записи на курсы</h2>
+                <span class="badge sql">enrollments</span>
+            </div>
+            <table>
+                <thead><tr><th>Курс</th><th>Прогресс</th><th>Статус</th></tr></thead>
+                <tbody>
+                <tr th:each="enrollment : ${enrollments}">
+                    <td><a th:href="@{/courses/{id}(id=${enrollment.courseId()}, studentId=${studentId})}" th:text="${enrollment.courseId()}"></a></td>
+                    <td th:text="${enrollment.progressPercent()} + '%'"></td>
+                    <td><span class="badge" th:text="${enrollment.status()}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <div class="panel-title">
+                <h2>Сертификаты</h2>
+                <span class="badge green">trigger result</span>
+            </div>
+            <table>
+                <thead><tr><th>Курс</th><th>Номер</th><th>Дата</th></tr></thead>
+                <tbody>
+                <tr th:each="certificate : ${certificates}">
+                    <td th:text="${certificate.courseId()}"></td>
+                    <td th:text="${certificate.certificateNumber()}"></td>
+                    <td th:text="${certificate.issuedAt()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+
+    <section class="grid grid-2">
+        <article class="card">
+            <div class="panel-title">
+                <h2>Оплаты</h2>
+                <span class="badge sql">payments</span>
+            </div>
+            <table>
+                <thead><tr><th>Курс</th><th>Сумма</th><th>Статус</th></tr></thead>
+                <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.courseId()}"></td>
+                    <td class="money" th:text="${#numbers.formatDecimal(payment.amount(), 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'"></td>
+                    <td><span class="badge" th:text="${payment.status()}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <div class="panel-title">
+                <h2>Решения</h2>
+                <span class="badge sql">submissions</span>
+            </div>
+            <table>
+                <thead><tr><th>Assignment</th><th>Статус</th><th>Ответ</th></tr></thead>
+                <tbody>
+                <tr th:each="submission : ${submissions}">
+                    <td th:text="${submission.assignmentId()}"></td>
+                    <td><span class="badge" th:text="${submission.status()}"></span></td>
+                    <td th:text="${submission.answerText()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+</main>
+</body>
+</html>

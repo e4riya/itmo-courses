@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${course.title()}">Курс</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+    <div class="flash" th:if="${message}" th:text="${message}"></div>
+
+    <section class="hero">
+        <div>
+            <span class="badge sql">Нормализованная модель</span>
+            <span class="badge" th:text="${course.status()}">PUBLISHED</span>
+            <span class="badge gray" th:text="${course.difficultyLevel()}">BEGINNER</span>
+            <h1 th:text="${course.title()}">Course</h1>
+            <p class="muted" th:text="${course.description()}">Description</p>
+            <table>
+                <tr><th>Категория</th><td th:text="${course.categoryName()}"></td></tr>
+                <tr><th>Преподаватель</th><td th:text="${course.instructorName()}"></td></tr>
+                <tr><th>Цена</th><td class="money" th:text="${#numbers.formatDecimal(course.price(), 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'"></td></tr>
+                <tr><th>Средний рейтинг MongoDB</th><td><span class="badge mongo" th:text="${averageRating}"></span></td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <h2>Демо-сценарии</h2>
+            <p class="muted">Формы ниже запускают реальные операции в PostgreSQL: запись, оплату и триггерное создание enrollment.</p>
+            <form th:action="@{/courses/{id}/enroll(id=${course.id()})}" method="post">
+                <label>Student ID
+                    <input name="studentId" th:value="${studentId}" required>
+                </label>
+                <button type="submit">Записаться</button>
+            </form>
+            <form th:action="@{/courses/{id}/pay(id=${course.id()})}" method="post">
+                <label>Student ID
+                    <input name="studentId" th:value="${studentId}" required>
+                </label>
+                <label>Amount
+                    <input name="amount" type="number" step="0.01" th:value="${course.price()}" required>
+                </label>
+                <button type="submit">Оплатить PAID</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="grid grid-2">
+        <div>
+            <h2 class="section-title">Программа курса</h2>
+            <article class="card module" th:each="module : ${modules}">
+                <h3 th:text="${module.position()} + '. ' + ${module.title()}">Module</h3>
+                <p class="muted" th:text="${module.description()}"></p>
+                <div class="lesson" th:each="lesson : ${lessonService.findByModule(module.id())}">
+                    <h4 th:text="${lesson.position()} + '. ' + ${lesson.title()}">Lesson</h4>
+                    <p class="muted">
+                        <span class="small-code" th:text="${lesson.id()}"></span>
+                        <span th:text="${lesson.durationMinutes()}"></span> минут
+                        <span th:if="${lesson.freePreview()}" class="badge green">free preview</span>
+                    </p>
+                    <form th:action="@{/lessons/{id}/complete(id=${lesson.id()})}" method="post">
+                        <input type="hidden" name="courseId" th:value="${course.id()}">
+                        <input type="hidden" name="studentId" th:value="${studentId}">
+                        <button type="submit">Завершить урок</button>
+                    </form>
+
+                    <div th:each="assignment : ${assignmentService.findByLesson(lesson.id())}">
+                        <h5 th:text="'Задание: ' + ${assignment.title()}">Assignment</h5>
+                        <p class="muted" th:text="'Максимум: ' + ${assignment.maxScore()}"></p>
+                        <form th:action="@{/assignments/{id}/submit(id=${assignment.id()})}" method="post">
+                            <input type="hidden" name="courseId" th:value="${course.id()}">
+                            <input type="hidden" name="studentId" th:value="${studentId}">
+                            <label>Ответ
+                                <textarea name="answerText" rows="3" required></textarea>
+                            </label>
+                            <button type="submit">Отправить решение</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <aside>
+            <div class="card">
+                <h2>Отзывы MongoDB</h2>
+                <p class="muted">Отзывы хранятся отдельно от строгой SQL-модели как гибкие документы.</p>
+                <form th:action="@{/courses/{id}/reviews(id=${course.id()})}" method="post">
+                    <label>User ID
+                        <input name="userId" th:value="${studentId}" required>
+                    </label>
+                    <label>Rating
+                        <select name="rating">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </label>
+                    <label>Текст
+                        <textarea name="text" rows="3" required></textarea>
+                    </label>
+                    <button type="submit">Добавить отзыв</button>
+                </form>
+                <div th:if="${#lists.isEmpty(reviews)}" class="muted">Отзывов пока нет.</div>
+                <div class="lesson" th:each="review : ${reviews}">
+                    <strong th:text="${review.rating()} + '/5'">5/5</strong>
+                    <p th:text="${review.text()}"></p>
+                    <p class="muted" th:text="${review.userId()}"></p>
+                </div>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

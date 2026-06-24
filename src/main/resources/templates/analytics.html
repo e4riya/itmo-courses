@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Аналитика</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+    <h1>Аналитика PostgreSQL</h1>
+    <p class="muted">Все таблицы ниже строятся вручную написанными native SQL-запросами из <span class="small-code">AnalyticsService</span>.</p>
+
+    <section class="grid grid-2">
+        <article class="card">
+            <h2>Топ курсов</h2>
+            <table>
+                <thead><tr><th>Курс</th><th>Студенты</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${topCourses}">
+                    <td th:text="${row.title}"></td>
+                    <td th:text="${row.students_count}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Средний прогресс</h2>
+            <table>
+                <thead><tr><th>Курс</th><th>Прогресс</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${courseAverageProgress}">
+                    <td th:text="${row.title}"></td>
+                    <td th:text="${row.average_progress}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Средние оценки</h2>
+            <table>
+                <thead><tr><th>Студент</th><th>Курс</th><th>Оценка</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${studentAverageGrades}">
+                    <td th:text="${row.student_name}"></td>
+                    <td th:text="${row.course_title}"></td>
+                    <td th:text="${row.average_grade}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Доход преподавателей</h2>
+            <table>
+                <thead><tr><th>Преподаватель</th><th>Доход</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${instructorIncome}">
+                    <td th:text="${row.instructor_name}"></td>
+                    <td th:text="${row.income}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Рейтинг студентов</h2>
+            <table>
+                <thead><tr><th>Место</th><th>Студент</th><th>Баллы</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${studentRanking}">
+                    <td th:text="${row.rank}"></td>
+                    <td th:text="${row.student_name}"></td>
+                    <td th:text="${row.total_score}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2 th:text="'Прогресс выше ' + ${value}">Прогресс</h2>
+            <form th:action="@{/analytics}" method="get">
+                <label>Порог
+                    <input type="number" step="0.01" name="value" th:value="${value}">
+                </label>
+                <button type="submit">Обновить</button>
+            </form>
+            <table>
+                <thead><tr><th>Курс</th><th>Прогресс</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${coursesWithProgressAbove}">
+                    <td th:text="${row.title}"></td>
+                    <td th:text="${row.average_progress}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Неактивные студенты</h2>
+            <table>
+                <thead><tr><th>Студент</th><th>Курс</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${inactiveStudents}">
+                    <td th:text="${row.student_name}"></td>
+                    <td th:text="${row.course_title}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Категории</h2>
+            <table>
+                <thead><tr><th>Категория</th><th>Курсы</th><th>Цена</th><th>Студенты</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${categoryStatistics}">
+                    <td th:text="${row.name}"></td>
+                    <td th:text="${row.courses_count}"></td>
+                    <td class="money" th:text="${#numbers.formatDecimal(row.average_price, 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'"></td>
+                    <td th:text="${row.students_count}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Записи без успешных оплат</h2>
+            <table>
+                <thead><tr><th>Курс</th><th>Записи</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${coursesWithoutPayments}">
+                    <td th:text="${row.title}"></td>
+                    <td th:text="${row.enrollments_count}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="card">
+            <h2>Доход по месяцам</h2>
+            <table>
+                <thead><tr><th>Месяц</th><th>Доход</th></tr></thead>
+                <tbody>
+                <tr th:each="row : ${monthlyIncome}">
+                    <td th:text="${row.month}"></td>
+                    <td class="money" th:text="${#numbers.formatDecimal(row.income, 0, 'WHITESPACE', 2, 'COMMA')} + ' ₽'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+</main>
+</body>
+</html>
