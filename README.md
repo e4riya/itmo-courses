@@ -22,7 +22,6 @@
 ## Быстрый запуск
 
 ```bash
-cd /Users/pivpav_20/IdeaProjects/onlinecourses
 docker compose up -d postgres mongodb
 ./gradlew bootRun
 ```
